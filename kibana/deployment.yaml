@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kibana
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      containers:
+        - name: kibana
+          image: gcr.io/practice-384108/kibana:7.6.2
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 5601
+          readinessProbe:
+            httpGet:
+              path: /login
+              port: 5601
+          volumeMounts:
+          - name: kibana-conf-volume
+            mountPath: /usr/share/kibana/config/kibana.yml
+            subPath: kibana.yml
+      volumes:
+        - name: kibana-conf-volume
+          configMap:
+            name: kibana-conf
+

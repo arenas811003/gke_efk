@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elasticsearch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elasticsearch
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      containers:
+        - name: elasticsearch
+          image: gcr.io/practice-384108/elasticsearch:7.6.2
+          imagePullPolicy: Always
+          # command: ["/bin/sh", "-c", "ls /usr/share/elasticsearch/config/elasticsearch.keystore.tmp -al"]
+          # lifecycle:
+          #   postStart:
+          #       exec:
+          #         command: ["/bin/sh", "-c", "chown elasticsearch:elasticsearch /usr/share/elasticsearch/config/elasticsearch.keystore"]
+          env:
+          - name: ES_JAVA_OPTS
+            value: "-Xmx512m -Xms512m"
+          # - name: ELASTIC_PASSWORD
+          #   value: changeme
+          - name: discovery.type
+            value: "single-node"
+          ports:
+          - containerPort: 9200
+          volumeMounts:
+          - name: elasticsearch-conf-volume
+            mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+            subPath: elasticsearch.yml
+          # - mountPath: /usr/share/elasticsearch/data
+          #   name: es-data
+      volumes:
+        - name: elasticsearch-conf-volume
+          configMap:
+            name: elasticsearch-conf
+        # - name: es-data
+        #   persistentVolumeClaim:
+        #   claimName: pvc-es-data

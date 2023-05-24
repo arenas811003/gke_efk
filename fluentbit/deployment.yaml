@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fluentbit
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: fluentbit
+  template:
+    metadata:
+      labels:
+        app: fluentbit
+    spec:
+      containers:
+        - name: fluentbit
+          image: gcr.io/practice-384108/fluent-bit:7.6.2
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 24224
+          volumeMounts:
+          - name: fluentbit-conf-volume
+            mountPath: /fluent-bit/etc
+      volumes:
+        - name: fluentbit-conf-volume
+          configMap:
+            name: fluentbit-conf
+            # items:
+            # - key: fluent-bit.conf
+            #   path: fluent-bit.conf
+            # - key: parser.conf
+            #   path: parser.conf

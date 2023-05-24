@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: elasticsearch
+spec:
+  rules:
+    - http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: elasticsearch
+              port:
+                number: 9200
+    # - http:
+    #     paths:
+    #     - path: /app/kibana
+    #       pathType: Prefix
+    #       backend:
+    #         service:
+    #           name: kibana
+    #           port:
+    #             number: 5601
