@@ -1,6 +1,7 @@
 # gke_efk
 
 cluster namespace:efk
+
 服務名:kibana
 
 helm 指令 範例：
